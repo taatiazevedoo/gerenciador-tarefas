@@ -7,39 +7,58 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AutenticacaoService {
 
-    public static final String SIGNIN_KEY = "signinKey";
-    public static final String BEARER = "Bearer ";
-    private static final String AUTHORIZATION = "Authorization";
+    public static final String JWT_KEY = "signinKey";
+    public static final String BEARER = "Bearer";
+    public static final String AUTHORITIES = "authorities";
+    private static final String HEADER_AUTHORIZATION = "Authorization";
+    private static final int EXPIRATION_TOKEN_ONE_HOUR = 3600000;
 
-    static public void addJWTToken(HttpServletResponse response, String usuario) {
+    static public void addJWTToken(HttpServletResponse response, Authentication authentication) {
+        Map<String, Object> claims = new HashMap<>();
+        List<String> authoritiesList = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        claims.put(AUTHORITIES, authoritiesList);
+
         String jwtToken = Jwts.builder()
-                .setSubject(usuario)
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
-                .signWith(SignatureAlgorithm.HS512, SIGNIN_KEY)
+                .setSubject(authentication.getName())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TOKEN_ONE_HOUR))
+                .signWith(SignatureAlgorithm.HS512, JWT_KEY)
+                .addClaims(claims)
                 .compact();
 
-        response.addHeader(AUTHORIZATION, BEARER + jwtToken);
-        response.addHeader("Access-Control-Expose-Headers", AUTHORIZATION);
+        response.addHeader(HEADER_AUTHORIZATION, BEARER + " " + jwtToken);
+        response.addHeader("Access-Control-Expose-Headers", HEADER_AUTHORIZATION);
     }
 
     static public Authentication obterAutenticacao(HttpServletRequest request) {
-        String token = request.getHeader(AUTHORIZATION);
+        String token = request.getHeader(HEADER_AUTHORIZATION);
 
         if (token != null) {
             Claims usuario = Jwts.parser()
-                    .setSigningKey(SIGNIN_KEY)
-                    .parseClaimsJws(token.replace(BEARER, ""))
+                    .setSigningKey(JWT_KEY)
+                    .parseClaimsJws(token.replace(BEARER + " ", ""))
                     .getBody();
 
             if (usuario != null) {
-                new UsernamePasswordAuthenticationToken(usuario, null, null);
+                List<SimpleGrantedAuthority> permissoes = ((ArrayList<String>) usuario.get(AUTHORITIES))
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+                new UsernamePasswordAuthenticationToken(usuario, null, permissoes);
             } else {
                 throw new RuntimeException("Autenticação falhou!");
             }

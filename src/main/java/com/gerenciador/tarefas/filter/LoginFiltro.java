@@ -21,8 +21,6 @@ public class LoginFiltro extends AbstractAuthenticationProcessingFilter {
 
     public LoginFiltro(String url, AuthenticationManager authenticationManager) {
         super(url, authenticationManager);
-//        super(new AntPathRequestMatcher(url));
-        setAuthenticationManager(authenticationManager);
     }
 
     @Override
@@ -46,6 +44,6 @@ public class LoginFiltro extends AbstractAuthenticationProcessingFilter {
                                             HttpServletResponse httpServletResponse,
                                             FilterChain filterChain,
                                             Authentication authentication) {
-        AutenticacaoService.addJWTToken(httpServletResponse, authentication.getName());
+        AutenticacaoService.addJWTToken(httpServletResponse, authentication);
     }
 }

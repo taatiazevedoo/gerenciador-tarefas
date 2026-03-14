@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,7 +28,7 @@ public class UsuarioAutenticadoService implements UserDetailsService {
         List<SimpleGrantedAuthority> regras = usuario.getRegras()
                 .stream()
                 .map(regra -> new SimpleGrantedAuthority(regra.getNome().toString()))
-                .collect(Collectors.toList());
+                .toList();
 
         return new User(usuario.getUsuario(), usuario.getSenha(), regras);
     }

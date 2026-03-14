@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name="usuario")
+@Table(name = "usuario")
 @Data
 @Getter
 @Setter
@@ -24,12 +24,15 @@ public class Usuario implements Serializable {
     @Column(unique = true, length = 50)
     private String usuario;
 
-    @Column(length = 50)
+    @Column(length = 4000)
     private String senha;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "usuario_regra", joinColumns = @JoinColumn(name = "usuario_id"),
-    inverseJoinColumns = @JoinColumn(name = "regra_id"),
-    uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "regra_id"}))
+    @JoinTable(
+            name = "usuario_regra",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "regra_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "regra_id"})
+    )
     private List<Regra> regras;
 }
