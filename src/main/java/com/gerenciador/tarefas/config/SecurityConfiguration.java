@@ -33,29 +33,28 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.csrf(crsf -> crsf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/login").permitAll()
-                            .requestMatchers(HttpMethod.GET,
-                                    "/usuario").hasAuthority(PermissaoEnum.USUARIO.toString())
-                            .requestMatchers(HttpMethod.POST,
-                                    "/usuario").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
+                            .requestMatchers(HttpMethod.GET, "/usuario").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
+                            .requestMatchers(HttpMethod.POST, "/usuario").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
+                            .requestMatchers(HttpMethod.POST, "/tarefa").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
                             .anyRequest()
                             .authenticated();
                 });
 
-        http.addFilterBefore(new LoginFiltro("/login",
-                        authenticationConfiguration.getAuthenticationManager()),
-                UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(
+                new LoginFiltro("/login", authenticationConfiguration.getAuthenticationManager()),
+                UsernamePasswordAuthenticationFilter.class
+        );
 
-        http.addFilterBefore(new AutenticacaoFiltro(),
-                UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AutenticacaoFiltro(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

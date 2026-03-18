@@ -21,6 +21,7 @@ public class LoginFiltro extends AbstractAuthenticationProcessingFilter {
 
     public LoginFiltro(String url, AuthenticationManager authenticationManager) {
         super(url, authenticationManager);
+        setAuthenticationManager(authenticationManager);
     }
 
     @Override

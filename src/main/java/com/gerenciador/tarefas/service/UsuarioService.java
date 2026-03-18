@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -52,5 +53,9 @@ public class UsuarioService {
 
     private void codificarSenha(Usuario usuario) {
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+    }
+
+    public Optional<Usuario> obterUsuarioPorId(Long idUsuario) {
+        return this.usuarioRepository.findById(idUsuario);
     }
 }

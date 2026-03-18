@@ -25,6 +25,7 @@ public class AutenticacaoService {
 
     static public void addJWTToken(HttpServletResponse response, Authentication authentication) {
         Map<String, Object> claims = new HashMap<>();
+
         List<String> authoritiesList = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -56,9 +57,9 @@ public class AutenticacaoService {
                 List<SimpleGrantedAuthority> permissoes = ((ArrayList<String>) usuario.get(AUTHORITIES))
                         .stream()
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                        .toList();
 
-                new UsernamePasswordAuthenticationToken(usuario, null, permissoes);
+                return new UsernamePasswordAuthenticationToken(usuario, null, permissoes);
             } else {
                 throw new RuntimeException("Autenticação falhou!");
             }
