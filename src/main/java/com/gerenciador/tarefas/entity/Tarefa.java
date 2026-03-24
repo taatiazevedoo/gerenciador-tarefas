@@ -2,10 +2,7 @@ package com.gerenciador.tarefas.entity;
 
 import com.gerenciador.tarefas.status.TarefaSatusEnum;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,6 +18,31 @@ import java.time.LocalTime;
 public class Tarefa implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public Tarefa() {
+    }
+
+    public Tarefa(long id,
+                  String titulo,
+                  String descricao,
+                  TarefaSatusEnum status,
+                  Usuario responsavel,
+                  Usuario criador,
+                  int quantidadeHorasEstimada,
+                  Integer quantidadeHorasRealizada,
+                  LocalTime dataCadastro,
+                  LocalTime dataAtualizacao) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.status = status;
+        this.responsavel = responsavel;
+        this.criador = criador;
+        this.quantidadeHorasEstimada = quantidadeHorasEstimada;
+        this.quantidadeHorasRealizada = quantidadeHorasRealizada;
+        this.dataCadastro = dataCadastro;
+        this.dataAtualizacao = dataAtualizacao;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -55,7 +77,4 @@ public class Tarefa implements Serializable {
     @Column
     @UpdateTimestamp
     private LocalTime dataAtualizacao;
-
-    @Column
-    private LocalTime tempoRealizado;
 }
