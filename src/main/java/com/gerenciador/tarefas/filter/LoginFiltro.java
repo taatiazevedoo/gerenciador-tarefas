@@ -26,7 +26,8 @@ public class LoginFiltro extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+                                                HttpServletResponse response)
+            throws AuthenticationException, IOException, ServletException {
         String collect = request.getReader().lines()
                 .collect(Collectors.joining(System.lineSeparator()));
 

@@ -1,6 +1,6 @@
 package com.gerenciador.tarefas.entity;
 
-import com.gerenciador.tarefas.status.TarefaSatusEnum;
+import com.gerenciador.tarefas.status.TarefaStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,7 +25,7 @@ public class Tarefa implements Serializable {
     public Tarefa(long id,
                   String titulo,
                   String descricao,
-                  TarefaSatusEnum status,
+                  TarefaStatusEnum status,
                   Usuario responsavel,
                   Usuario criador,
                   int quantidadeHorasEstimada,
@@ -56,7 +56,7 @@ public class Tarefa implements Serializable {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TarefaSatusEnum status;
+    private TarefaStatusEnum status;
 
     @Column
     private Usuario responsavel;

@@ -1,6 +1,6 @@
 package com.gerenciador.tarefas.response;
 
-import com.gerenciador.tarefas.status.TarefaSatusEnum;
+import com.gerenciador.tarefas.status.TarefaStatusEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class ObterTarefaResponse {
     private long id;
     private String titulo;
     private String descricao;
-    private TarefaSatusEnum status;
+    private TarefaStatusEnum status;
     private String responsavel;
     private String criador;
     private int quantidadeHorasEstimada;

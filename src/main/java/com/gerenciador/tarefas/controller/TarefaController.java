@@ -7,6 +7,7 @@ import com.gerenciador.tarefas.response.AtualizarTarefaResponse;
 import com.gerenciador.tarefas.response.ObterTarefaResponse;
 import com.gerenciador.tarefas.response.ObterTarefasPaginadaResponse;
 import com.gerenciador.tarefas.response.CadastrarTarefaResponse;
+import com.gerenciador.tarefas.service.MessageService;
 import com.gerenciador.tarefas.service.TarefaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class TarefaController {
 
     @Autowired
     private TarefaService tarefaService;
+
+    @Autowired
+    private MessageService messageService;
 
     @PostMapping
     public ResponseEntity<CadastrarTarefaResponse> salvarTarefa(@Valid @RequestBody CadastrarTarefaRequest request) {
@@ -64,7 +68,7 @@ public class TarefaController {
                             .id(tarefa.getId())
                             .titulo(tarefa.getTitulo())
                             .descricao(tarefa.getDescricao())
-                            .responsavel(tarefa.getResponsavel() != null ? tarefa.getResponsavel().getUsuario() : "NAO_ATRIBUIDA")
+                            .responsavel(getResponsavel(tarefa))
                             .criador(tarefa.getCriador().getUsuario())
                             .status(tarefa.getStatus())
                             .quantidadeHorasEstimada(tarefa.getQuantidadeHorasEstimada())
@@ -107,5 +111,11 @@ public class TarefaController {
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private String getResponsavel(Tarefa tarefa) {
+        String responsavelDefault = messageService.getMessage("msg.responsavel.nao.atribuido");
+
+        return tarefa.getResponsavel() != null ? tarefa.getResponsavel().getUsuario() : responsavelDefault;
     }
 }

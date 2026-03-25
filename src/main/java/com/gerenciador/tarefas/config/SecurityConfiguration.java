@@ -33,7 +33,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -42,9 +43,12 @@ public class SecurityConfiguration {
         http.csrf(crsf -> crsf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/login").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/usuario").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
-                            .requestMatchers(HttpMethod.POST, "/usuario").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
-                            .requestMatchers(HttpMethod.POST, "/tarefa").hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
+                            .requestMatchers(HttpMethod.GET, "/usuario")
+                            .hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
+                            .requestMatchers(HttpMethod.POST, "/usuario")
+                            .hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
+                            .requestMatchers(HttpMethod.POST, "/tarefa")
+                            .hasAuthority(PermissaoEnum.ADMINISTRADOR.toString())
                             .anyRequest()
                             .authenticated();
                 });

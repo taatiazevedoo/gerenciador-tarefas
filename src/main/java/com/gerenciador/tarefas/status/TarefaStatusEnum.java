@@ -1,6 +1,6 @@
 package com.gerenciador.tarefas.status;
 
-public enum TarefaSatusEnum {
+public enum TarefaStatusEnum {
 
     CRIADA, PROGRESSO, BLOQUEADA, FINALIZADA;
 }

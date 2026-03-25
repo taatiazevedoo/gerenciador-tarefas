@@ -1,6 +1,6 @@
 package com.gerenciador.tarefas.request;
 
-import com.gerenciador.tarefas.status.TarefaSatusEnum;
+import com.gerenciador.tarefas.status.TarefaStatusEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class AtualizarTarefaRequest {
     @Length(max = 150, message = "{atualizar.tarefa.request.descricao.limite}")
     private String descricao;
 
-    private TarefaSatusEnum status;
+    private TarefaStatusEnum status;
 
     private Long responsavel;
 

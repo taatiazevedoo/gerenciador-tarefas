@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,11 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class AutenticacaoService {
 
-    public static final String JWT_KEY = "signinKey";
-    public static final String BEARER = "Bearer";
-    public static final String AUTHORITIES = "authorities";
+    private static final String JWT_KEY = "signinKey";
+    private static final String BEARER = "Bearer";
+    private static final String AUTHORITIES = "authorities";
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final int EXPIRATION_TOKEN_ONE_HOUR = 3600000;
+
+    @Autowired
+    private static MessageService messageService;
 
     static public void addJWTToken(HttpServletResponse response, Authentication authentication) {
         Map<String, Object> claims = new HashMap<>();
@@ -61,7 +65,9 @@ public class AutenticacaoService {
 
                 return new UsernamePasswordAuthenticationToken(usuario, null, permissoes);
             } else {
-                throw new RuntimeException("Autenticação falhou!");
+                String msgException = messageService.getMessage("msg.autenticacao.falha.conexao");
+
+                throw new RuntimeException(msgException);
             }
         }
 
